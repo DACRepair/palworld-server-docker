@@ -1,8 +1,14 @@
-#!/bin/sh
+#!/bin/bash
 
+STARTCOMMAND="./PalServer.sh"
 
-STARTCOMMAND="./PalServer.sh -port=${PORT} -players=${PLAYERS}"
+if [ -n "${PORT}" ]; then
+    STARTCOMMAND="${STARTCOMMAND} -port=${PORT}"
+fi
 
+if [ -n "${PLAYERS}" ]; then
+    STARTCOMMAND="${STARTCOMMAND} -players=${PLAYERS}"
+fi
 
 if [ "${COMMUNITY}" = true ]; then
     STARTCOMMAND="${STARTCOMMAND} EpicApp=PalServer"
@@ -13,7 +19,7 @@ if [ -n "${PUBLIC_IP}" ]; then
 fi
 
 if [ -n "${PUBLIC_PORT}" ]; then
-    STARTCOMMAND="${STARTCOMMAND} -publiport=${PUBLIC_PORT}"
+    STARTCOMMAND="${STARTCOMMAND} -publicport=${PUBLIC_PORT}"
 fi
 
 if [ -n "${SERVER_NAME}" ]; then
@@ -30,12 +36,12 @@ fi
 
 if [ "${MULTITHREADING}" = true ]; then
     STARTCOMMAND="${STARTCOMMAND} -useperfthreads -NoAsyncLoadingThread -UseMultithreadForDS"
-fi 
+fi
 
 cd /palworld || exit
 
 echo "${STARTCOMMAND}"
 
-printf "\e[0;32m*****STARTING SERVER*****\e[0m"
+printf "\e[0;32m*****STARTING SERVER*****\e[0m\n"
 
 su steam -c "${STARTCOMMAND}"

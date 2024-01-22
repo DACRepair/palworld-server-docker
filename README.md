@@ -1,4 +1,4 @@
-# Palworld server docker
+# Palworld Dedicated Server Docker
 
 ![Release](https://img.shields.io/github/v/release/thijsvanloef/palworld-server-docker)
 ![Docker Pulls](https://img.shields.io/docker/pulls/thijsvanloef/palworld-server-docker)
@@ -7,7 +7,16 @@
 
 [View on Docker Hub](https://hub.docker.com/repository/docker/thijsvanloef/palworld-server-docker)
 
-This is a Dockerized version of the [Palworld](https://store.steampowered.com/app/1623730/Palworld/) dedicated server.
+> **_NOTE:_**  Unsure how to get started? Check out the [this guide I wrote!](https://tice.tips/containerization/palworld-server-docker/)  
+
+This is a Docker container to help you get started with hosting your own [Palworld](https://store.steampowered.com/app/1623730/Palworld/) dedicated server.
+
+This Docker container has been tested and will work on both Linux (Ubuntu/Debian) and Windows 10.
+
+> [!IMPORTANT]
+> At the moment, Xbox Gamepass/Xbox Console players will not be able to join a dedicated server.
+>
+> They will need to join players using the invite code and are limited to sessions of 4 players max.
 
 ## How to use
 
@@ -20,23 +29,25 @@ This repository includes an example [docker-compose.yml](example/docker-compose.
 ```yml
 services:
    palworld:
-      image: thijsvanloef/palworld-server-docker
+      image: thijsvanloef/palworld-server-docker:latest
       restart: unless-stopped
       container_name: palworld-server
       ports:
         - 8211:8211/udp
         - 27015:27015/udp
       environment:
-         - PORT=8211
-         - PLAYERS=16
-         - MULTITHREADING=FALSE
+         - PUID=1000
+         - PGID=1000
+         - PORT=8211 # Optional but recommended
+         - PLAYERS=16 # Optional but recommended
+         - MULTITHREADING=false
          - COMMUNITY=false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
          # Enable the environment variables below if you have COMMUNITY=true
          # - SERVER_PASSWORD="worldofpals"
          # - SERVER_NAME="World of Pals"
          # - ADMIN_PASSWORD="someAdminPassword"
       volumes:
-         - /path/to/your/palworld/folder:/palworld/
+         - ./palworld:/palworld/
 ```
 
 ### Docker Run
@@ -51,6 +62,8 @@ docker run -d \
     -v ./<palworld-folder>:/palworld/ \
     -e PLAYERS=16 \
     -e PORT=8211 \
+    -e PUID=1000 \
+    -e PGID=1000 \
     -e COMMUNITY=false \
     --restart unless-stopped \
     thijsvanloef/palworld-server-docker
@@ -64,12 +77,13 @@ It is highly recommended you set the following environment values before startin
 
 * PLAYERS
 * PORT
-* MULTITHREADING
 
 | Variable         | Info                                                                                                                                                                                               | Default Values | Allowed Values |
 | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- | -------------- |
 | PLAYERS*         | Max amount of players that are able to join the server                                                                                                                                             | 16             | 1-31           |
 | PORT*            | UDP port that the server will expose                                                                                                                                                               | 8211           | 1024-65535     |
+| PUID*            | The uid of the user the server should run as                                                                                                                                                       | 1000           | !0             |
+| PGID*            | The gid of the group the server should run as                                                                                                                                                      | 1000           | !0             |
 | MULTITHREADING** | Improves performance in multi-threaded CPU environments. It is effective up to a maximum of about 4 threads, and allocating more than this number of threads does not make much sense.             | false          | true/false     |
 | COMMUNITY        | Whether or not the server shows up in the community server browser (USE WITH SERVER_PASSWORD)                                                                                                      | false          | true/false     |
 | PUBLIC_IP        | You can manually specify the global IP address of the network on which the server running.If not specified, it will be detected automatically. If it does not work well, try manual configuration. |                | x.x.x.x        |
@@ -78,7 +92,6 @@ It is highly recommended you set the following environment values before startin
 | SERVER_PASSWORD  | Secure your community server with a password                                                                                                                                                       |                | "string"       |
 | ADMIN_PASSWORD   | Secure administration access in the server with a password                                                                                                                                         |                | "string"       |
 | UPDATE_ON_BOOT** | Update/Install the server when the docker container starts (THIS HAS TO BE ENABLED THE FIRST TIME YOU RUN THE CONTAINER)                                                                           | true           | true/false     |
-
 
 *highly recommended to set
 
@@ -94,3 +107,7 @@ It is highly recommended you set the following environment values before startin
 ## Reporting Issues/Feature Requests
 
 Issues/Feature requests can be submitted by using [this link](https://github.com/thijsvanloef/palworld-server-docker/issues/new/choose).
+
+### Known Issues
+
+Known issues are listed in the [wiki](https://github.com/thijsvanloef/palworld-server-docker/wiki/Known-Issues)
