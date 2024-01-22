@@ -11,4 +11,5 @@ if [ "${UPDATE_ON_BOOT}" = true ]; then
 
 fi
 
+./config.sh
 ./start.sh

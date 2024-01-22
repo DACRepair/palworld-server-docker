@@ -1,24 +1,24 @@
 FROM cm2network/steamcmd:root
+
 LABEL maintainer="thijs@loef.dev"
+LABEL maintainer="dacrepair@gmail.com"
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    xdg-user-dirs=0.17-2 \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+ENV PORT=8211
+ENV PLAYERS=16
+ENV MULTITHREADING false
+ENV COMMUNITY false
+ENV PUBLIC_IP ''
+ENV PUBLIC_PORT ''
+ENV SERVER_PASSWORD ''
+ENV SERVER_NAME 'A Cool Docker Palworld Server'
+ENV ADMIN_PASSWORD topsecret
+ENV UPDATE_ON_BOOT true
 
-ENV PORT=8211 \
-    PLAYERS=16 \
-    MULTITHREADING=false \
-    COMMUNITY=false \
-    PUBLIC_IP= \
-    PUBLIC_PORT= \
-    SERVER_PASSWORD= \
-    SERVER_NAME= \
-    ADMIN_PASSWORD= \
-    UPDATE_ON_BOOT=true
+RUN apt-get update && apt-get install -y --no-install-recommends xdg-user-dirs=0.17-2 \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY ./scripts/* /home/steam/server/
-RUN chmod +x /home/steam/server/init.sh /home/steam/server/start.sh
+RUN chmod +x /home/steam/server/*.sh
 
 WORKDIR /home/steam/server
 
