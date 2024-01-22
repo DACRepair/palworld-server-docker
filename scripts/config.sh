@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-PALWORLD_PATH=${$1:='/palworld'}
 
+PALWORLD_PATH=${$1:='/palworld'}
 
 DEFAULT_PATH='/$PALWORLD_PATH/DefaultPalWorldSettings.ini'
 DESTINATION='/$PALWORLD_PATH/steamapps/common/PalServer/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini'
